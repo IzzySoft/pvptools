@@ -1,0 +1,176 @@
+#==============================================================================
+# phpVideoPro Staff IMDBid Updater             (c) 2007-2009 by Itzchak Rehberg
+# -----------------------------------------------------------------------------
+# $Id$
+#==============================================================================
+
+Content
+=======
+
+1) Intro
+2) Quick Intro for the Impatient
+3) Basics behind and probable cruxes
+4) Usage for the Patient
+5) Conclusion
+
+-------------------------------------------------------------------------------
+
+1) Intro
+========
+
+ This text file only deals with things special to the PHP script with the
+ same name. Please also read the pvptools.txt file for common information,
+ including (but not restricted to) Copyright and Warranty.
+
+-------------------------------------------------------------------------------
+
+2) Quick Intro for the Impatient
+--------------------------------
+
+ 1 - Make sure all preconditions are fulfilled (phpVideoPro and IMDBPHP are
+     installed)
+ 2 - Check the configuration inside the get_name_ids.php file and make the
+     "dir" reflecting the base directory of your phpVideoPro installation
+ 3 - For the cautious: Make sure $update_name is set to FALSE
+ 4 - Run the script the first time having $compare_mode set to "equal" (or
+     "binary") - to make sure only exact matches get updated -, passing it the
+     name of your installation (in the shipped version, this is "demo"). This
+     can be done more or less unattended, since it won't do any harm (no
+     guarantee, though ;)
+ 5 - Before running it a second time, switch $compare_mode to something less
+     restrictive. The patient uses e.g. "binary_i" for case insensitive
+     comparision; I recommend "metaphone". This time, better run in small steps
+     and always check what has been updated is correct. Use $skip_to and
+     $stop_at to slowly move forward through your collection.
+
+-------------------------------------------------------------------------------
+
+3) Basics behind and probable cruxes
+------------------------------------
+
+ The script is intended to run from the command line for a couple of reasons.
+ First, if it would run in the browser, you had to jump around between the
+ browser and the command line to change the options between the runs. Second,
+ and more important: The browser would simply timeout before the job is done.
+
+ This means two things: a) you need to have the PHP CLI (Command Line Interface)
+ installed, and b) you need to have its php.ini set up correctly. With the
+ defaults used there, the script will most likely abort with some "not enough
+ memory" warning - so you need to increase the memory_limit in the php.ini
+ first. For most installations, 24M will be a good choice.
+
+-------------------------------------------------------------------------------
+
+4) Usage for the Patient
+------------------------
+
+ This will basically be the same as for the impatient, just a bit more detailed.
+ First thing you have to do is to adjust the configuration to match your
+ installation. If you open the get_name_ids.php with your favorite editor, you
+ will easily find the section marked "==[ Configuration ]==" - that's where you need
+ to go. Better don't change anything outside this section if you're not
+ familiar with PHP and don't know what you are doing ;)
+
+ The first line of this section defines the directory where your phpVideoPro
+ installation is to be found in. This is what you *must* adjust. This is
+ followed by a line defining the ID of an administrative user in your phpVideoPro
+ installation (who has permissions on all records) - usually this is the user
+ named "admin". To find out the corresponding ID, log into your phpVideoPro
+ installation as administrative user, and look the ID up in Admin->Users.
+
+ Now for the next paragraph. The $stopafter you will normally leave as-is:
+ This tells you how many movies you want to process per run at maximum. This
+ is for the advanced users play-around - we normally will use smaller numbers,
+ but adjust them with the $skip_to and $stop_at variables.
+
+ $ignore_cat also is very unlikely to be changed by you. It is a comma separated
+ list of categories where you won't find information on the IMDB for, like
+ video clips in the given configuration. Skipping these categories completely
+ reduces the runtime of the script. But you have to know the internal category
+ names if you want to play with these (you want? You'll find more names in the
+ translation files, or on the admin->categories screen in your browser).
+
+ $skip_id you can also skip for the first run. This gets interesting when
+ encountering our so-called "false positives" (very unlikely with this script):
+ The numbers shown in front of such can be put in here comma separated. But
+ beware: These numbers may change between runs if any other movies have been
+ identified positively (i.e. if new movies have been introduced/updated to your
+ database), so handle this with care.
+
+ Now we again have two interesting settings: $skip_to tells us where to start
+ the scan, and $stop_at where to stop. This way you can walk through the big
+ list in pieces you can handle - and after a dry run showing you some "false
+ positives", you can adjust your run to stop before or start after them to
+ avoid messing up your data.
+
+ So we come to $report_nochange: Setting this to FALSE, you can suppress those
+ messages informing you about crew members which we already found in the correct
+ state (i.e. they probably have been updated via another movie before). This
+ might be interesting information during your first runs - but switching it off
+ will help you lateron to concentrate on the real stuff.
+
+ $compare_mode is a very sensitive setting - with "sensitive" having a double
+ meaning: a) setting it wrong may cause a real mess, b) it tells the script
+ how sensitive to compare. Here is what the different possible options are:
+ 
+ * equal     - very strict checking, only exact matches (letters AND case)
+               are considered to be correct
+ * binary    - pretty the same, just different realization
+ * binary_i  - pretty the same again, but case does not matter (i.e.
+               "Duffy Duck" is counted equal to "duffy duck")
+ * soundex   - matches if both names would "sound" equal. So this would
+               count "Hess" the same as "Hés" - but unfortunately also
+	       "Hilbert"="Heilbronn" - where the first is a person but
+	       the second a city in Germany. Using this option is NOT
+	       recommended - but there may be specific reasons for you
+	       to use it anyhow.
+ * metaphone - pretty the same as "soundex" considering the positive
+               aspects - but not having the negative ones. Should not
+	       be used on the first run, but is a good option lateron.
+
+ Last setting to discuss: $update_name. This tells what to do if we
+ encounter a person with a valid IMDB ID, but it is stored with a completely
+ different IMDB ID in our database. Very unlikely to happen - but who knows.
+ We better leave that to FALSE.
+
+
+ So far for the configuration. Now to do the job, you probably will need a
+ couple of runs. But other than with the get_movie_ids.php script, a dry
+ run will not be needed here: We already have the movies IMDB ID available,
+ and thus restrict our search to the crew members registered with those
+ movies at the IMDB site - which means there is not that much that can go
+ wrong.
+
+ Still, for the first run we should set $compare_mode to a strict compare. I
+ recommend "equal", but you may as well use "binary". You may set the $stop_at
+ to something infinite (e.g. 999999) and let the script run unattended, e.g.
+   ./get_name_ids.php demo | tee firstrun.log
+ and check the log later to see what has been updated ("+" entries) - and what
+ failed ("!" entries) and why. If you have no failed entries (again, very very
+ unlikely), you are already done at this point. If not, see next paragraph.
+
+ Still having some entries left, we might need a couple of additinal runs with
+ different settings. I recommend to set $compare_mode = "metaphone", which
+ works pretty fine. Only walk small ranges so you can keep up with the changes:
+ 10..20 entries at once should be fine (remember, you can do so by modifying
+ $skip_to and $stop_at). Everything updated now is probably misspelled in your
+ database, so you might want to correct the spelling in parallel.
+
+ Having completed all entries on subsequent runs while moving the "modification
+ window" with $skip_to .. $stop_at, you are finally done - it's less complicated
+ than with the movie IMDB ids, since here we already have some good references
+ to use.
+
+-------------------------------------------------------------------------------
+
+5) Conclusion
+-------------
+
+ Looks like a lot of work? Well, it is to some degree. But it is still much
+ faster than updating all your movies by hand, isn't it? And if you are not
+ THAT concerned about havin ALL your movies updated, you may just stay with
+ the results of the first run, and don't care for your misspellings - which
+ will probably still update almost half of your entries.
+
+ Bullshit - now the doc as large as the script itself - at least it was
+ written in much fewer time...

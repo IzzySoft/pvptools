@@ -1,0 +1,121 @@
+#==============================================================================
+# phpVideoPro Admin Tools                      (c) 2007-2009 by Itzchak Rehberg
+# -----------------------------------------------------------------------------
+# $Id$
+#==============================================================================
+
+Content
+=======
+
+1) Intro
+2) WARNING
+3) Copyright
+4) Warranty
+5) Scripts included and how to use them
+6) Further readings
+
+-------------------------------------------------------------------------------
+
+1) Intro
+========
+
+ These scripts are intended to automatic update some data in your phpVideoPro
+ installation with information retrieved from the IMDB. You probably don't need
+ any of them if you never ran a version less than v0.9.3 of phpVideoPro, and
+ you probably don't need the get_movie_ids.php script if you never ran a version
+ less than v0.8.2 of phpVideoPro - provided you always used the IMDB query window
+ to retrieve all information, since it will just update the IMDB ID (where not
+ set) and the rating (where not set) of the movies within your database.
+
+ The scripts themselves make use of the phpVideoPro "libraries" to do their jobs.
+ This means, for many things it uses the settings of the given installation,
+ e.g. concerning the IMDB cache and the like. Furthermore, they of course need
+ some IMDB libraries - which means you should have installed the IMDBPHP
+ package (version 1.0.8 or higher) and it must be available via the include_path
+ configured for your php-cli binaries.
+
+-------------------------------------------------------------------------------
+
+2) WARNING
+==========
+
+ There are some warnings you should read first before running this script:
+ 1 - Don't run it against an installation with a version smaller than
+     0.8.4 - it was never tested with those, even if it *may* run with the
+     0.8.3 due to the data structures, it will break at best if you run it
+     against a 0.8.2 or smaller, or may even destroy some data. So upgrade
+     to at least v0.8.4 (or higher) first. get_name_ids will for sure break
+     with any phpVideoPro installation less than v0.9.3 due to missing
+     database structures.
+ 2 - If you cannot fix "false positives" in the database yourself, always
+     make a "dry run" first (more about this later) to ensure there are none.
+     Especially dangerous is the $write_yf setting, which you never should
+     use in this case (also later more on this).
+ 3 - Before you run the script, go to your phpVideoPro web interface, log in
+     as admin, go to admin->configure and check the IMDB settings that either
+     caching is disabled or a valid cache directory is specified. Otherwise
+     you may destroy parts of your installation.
+
+-------------------------------------------------------------------------------
+
+3) CopyRight
+------------
+
+  phpVideoPro is (c) 2001-2009 by Itzchak Rehberg and IzzySoft, and is
+  protected by the GNU Public License Version 2 (GPL). In short, this means:
+  - you'll have the source code available
+  - you may run this program on as many machines as you want/have
+  - you may copy and distribute it as much as you want - as long as you don't
+    take money for it (and keep all files together!)
+  - you may edit this code to fit your needs/wishes (please, let me know about
+    improvements!)
+  - you may use this code for own applications - but they have to be released
+    under GPL then as well.
+  For details, please read the file named LICENSE in the doc/ directory.
+  If you release this program e.g. in a bundle of software on CD/DVD, release
+  an article about this program etc, let the author know about this. Not that
+  you need an explicit permission (as long as you stick to the above terms,
+  especially the GPL) - you are even encouraged to do so. I just want to be
+  informed about the fact to be up-to-date about all PR taking place ;).
+
+-------------------------------------------------------------------------------
+
+4) Warranty
+-----------
+
+  This program is provided "as is" with no warranty (see GPL Par. 11).
+  Especially this means, that the author is not responsible for any damages
+  caused by the use of this software - explicitly or implicitly. The only thing
+  I can guarantee you is: it will consume some disk space :)
+
+-------------------------------------------------------------------------------
+
+5) Scripts included and how to use them
+---------------------------------------
+
+ Currently there are two scripts provided with this package:
+ * get_movie_ids.php tries to update the movies with their corresponding
+   IMDB ID
+ * get_name_ids.php does the same for the crew members (i.e. actors, directors,
+   composers)
+
+ Before you start running them, consider the following:
+ * get_name_ids.php depends on the fact that your movies already have the
+   corresponding IMDB IDs set, and will only update crew members mentioned
+   with such movies (this is to ensure we chose the correct people). So if
+   you don't have the movie IMDB IDs stored into your database, make sure
+   to run get_movie_ids.php first
+ * as mentioned before, both scripts require phpVideoPro (at least v0.9.3)
+   and IMDBPHP (at least v1.0.8) to be installed and configured.
+ * Before running the scripts, please consult their corresponding documentation.
+   You will for sure need to check their configuration, and have the advice
+   concerning their special usage checked.
+
+-------------------------------------------------------------------------------
+
+6) Further readings
+-------------------
+
+ More information can be found in the other text files of this package. You
+ might as well want to check the projects web site for more information: See
+ http://projects.izzysoft.de/trac/phpvideopro
