@@ -139,7 +139,7 @@ function imdbCheck(&$iactors,&$actor,$role,$table) {
 #------------------------------------------------[ Gather the movies first ]---
  if (!empty($ignore_cat)) {
    $skip_cat = "";
-   $db->query("SELECT id FROM cat WHERE name IN ('$ignore_cat')");
+   $db->query("SELECT id FROM pvp_cat WHERE name IN ('$ignore_cat')");
    while ($db->next_record()) {
      $skip_cat .= ",".$db->f('id');
    }
