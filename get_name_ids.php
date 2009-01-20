@@ -95,7 +95,7 @@ function imdbCheck(&$iactors,&$actor,$role,$table) {
     $pfound = FALSE;
     if (empty($actor['imdb_id'])) {
       if (samestr($iactor['name'],$actor['fullname'])) { // got her/him obviously
-        $db->query("UPDATE $table SET imdb_id='".$iactor['imdb']."' WHERE id=".$actor['id']);
+        $db->query("UPDATE pvp_${table} SET imdb_id='".$iactor['imdb']."' WHERE id=".$actor['id']);
         echo "  + Updated $role '".$actor['fullname']."' (ID ".$actor['id'].") with IMDB ID '".$iactor['imdb']."'\n";
         ++$upd_id;
         $pfound = TRUE;
@@ -112,7 +112,7 @@ function imdbCheck(&$iactors,&$actor,$role,$table) {
         if (!$update_name) break;
         echo "  ! $role '".$actor['fullname']."' is known at IMDB by ID '".$iactor['imdb']."', but we have '".$actor['imdb_id'].":'\n";
         // here we have to create a new DB entry for the given person, and update the movie record accordingly:
-        $aid = $db->insert_person($role,"SELECT id FROM $table","INSERT INTO $table",$actor['name'],$actor['firstname'],$iactor['imdb']);
+        $aid = $db->insert_person($role,"SELECT id FROM pvp_${table}","INSERT INTO pvp_${table}",$actor['name'],$actor['firstname'],$iactor['imdb']);
         if ($aid) {
           echo "   - Created new record with ID ${aid}\n";
           if ($role=="actor") {
