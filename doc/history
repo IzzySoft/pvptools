@@ -8,6 +8,7 @@ v0.2
 + added script to retrieve the person IMDB IDs for the crew members
 * due to changes in phpVideoPro (e.g. database), the movie ID script had to be updated
 * changed the name of the movie ID script to make its purpose more clear
++ added Makefile for easy installation (and packaging)
 
 v0.1 (16.01.2007)
 -----------------
