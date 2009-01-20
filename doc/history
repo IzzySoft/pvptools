@@ -1,0 +1,14 @@
+$Id$
+
+History of pvptools
+===================
+
+v0.2
+-----------------
++ added script to retrieve the person IMDB IDs for the crew members
+* due to changes in phpVideoPro (e.g. database), the movie ID script had to be updated
+* changed the name of the movie ID script to make its purpose more clear
+
+v0.1 (16.01.2007)
+-----------------
+* first public version, one script to retrieve the IMDB movie IDs
