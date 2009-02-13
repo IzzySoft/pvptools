@@ -3,6 +3,10 @@ $Id$
 History of pvptools
 ===================
 
+v0.3
+-----------------
++ added script for backup and restore
+
 v0.2 (23.01.2009)
 -----------------
 + added script to retrieve the person IMDB IDs for the crew members

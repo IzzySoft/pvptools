@@ -1,0 +1,107 @@
+#==============================================================================
+# phpVideoPro Backup CLI                            (c) 2009 by Itzchak Rehberg
+# -----------------------------------------------------------------------------
+# $Id$
+#==============================================================================
+
+Content
+=======
+
+1) Intro
+2) Quick Intro for the Impatient
+3) Basics behind and probable cruxes
+4) Usage for the Patient
+
+-------------------------------------------------------------------------------
+
+1) Intro
+========
+
+ This text file only deals with things special to the PHP script with the
+ same name. Please also read the pvptools.txt file for common information,
+ including (but not restricted to) Copyright and Warranty.
+
+ The backup script is intended to allow backups from the command line, e.g. to
+ be regularly scheduled via cron. Backups are written to the standard output,
+ i.e. you have to redirect the output to a file. Restore of course will read
+ from the file specified, which must reside in the backup directory specified
+ in your phpVideoPro configuration.
+
+-------------------------------------------------------------------------------
+
+2) Quick Intro for the Impatient
+--------------------------------
+
+ 1 - Check the configuration inside the backup.php file and make the
+     "dir" reflecting the base directory of your phpVideoPro installation
+ 2 - Run the script once without any parameters to see its syntax
+ 3 - Do your backups and restores
+
+-------------------------------------------------------------------------------
+
+3) Basics behind and probable cruxes
+------------------------------------
+
+ This script is intended to be run from the command line only (do not place it
+ where it can be reached from other people, especially avoid storing it in your
+ web tree), while it utilizes phpVideoPros API.
+
+ This means two things: a) you need to have the PHP CLI (Command Line Interface)
+ installed, and b) you need to have its php.ini set up correctly. With the
+ defaults used there, the script will most likely abort with some "not enough
+ memory" warning - so you need to increase the memory_limit in the php.ini
+ first. For most installations, 24M will be a good choice.
+
+-------------------------------------------------------------------------------
+
+4) Usage for the Patient
+------------------------
+
+ This will basically be the same as for the impatient, just a bit more detailed.
+ First thing you have to do is to adjust the configuration to match your
+ installation. If you open the backup.php with your favorite editor, you
+ will easily find the section marked "==[ Configuration ]==" - that's where you
+ need to go. Better don't change anything outside this section if you're not
+ familiar with PHP and don't know what you are doing ;)
+
+ The first line of this section defines the directory where your phpVideoPro
+ installation is to be found in. This is what you *must* adjust. This is
+ followed by a line defining the ID of an administrative user in your phpVideoPro
+ installation (who has permissions on all records) - usually this is the user
+ named "admin". To find out the corresponding ID, log into your phpVideoPro
+ installation as administrative user, and look the ID up in Admin->Users.
+ The third line specifies whether to "clean" the DB before doing a movie
+ restore, i.e. drop all movie records first. If set to FALSE, all movies from
+ the given backup file will be "appended", i.e. created as new records.
+
+ So far for the configuration. If you now run the script once without
+ specifying any parameters, it will tell you its syntax. As it is with backups,
+ there are basically two modi: backup and restore. So we will explain both here:
+
+ To create a backup, you will need a couple of command line parameters:
+ 1 - the name of the installation you configured above
+ 2 - the literal word "backup"
+ 3 - what you want to backup: "movie", "sysconf", or "cats"
+ Now keep in mind that everything is written to the standard output, so you
+ need to redirect the output to a file in order to store the backup. An example
+ call could look like this:
+
+ ./backup.php demo backup movie >movies_2009-05-12.pvp
+
+ For a test if everything works, better take something smaller (e.g. "sysconf")
+ and do not redirect the output. If you see regular error messages, something
+ went wrong. But if you see undefinable binary stuff, it probably worked :-)
+
+ For a restore, things look a bit different. First, the file will be read from
+ disk, and need to reside within the backup directory specified in your
+ phpVideoPro configuration. Next, the backup type (movie, sysconf, cats) will
+ be automatically detected. Which leaves us again with three parameters:
+ 1 - the name of the installation you configured above
+ 2 - the literal word "restore"
+ 2 - the name of the file (without path) to restore from
+
+ So again, an example could look like that:
+
+ ./backup.php demo restore movies_2009-05-12.pvp
+
+ Now you either get error messages, or the restore succeeded.

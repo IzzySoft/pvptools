@@ -93,11 +93,12 @@ Content
 5) Scripts included and how to use them
 ---------------------------------------
 
- Currently there are two scripts provided with this package:
+ Currently there are three scripts provided with this package:
  * get_movie_ids.php tries to update the movies with their corresponding
    IMDB ID
  * get_name_ids.php does the same for the crew members (i.e. actors, directors,
    composers)
+ * backup.php is your CLI interface for backups and their restore
 
  Before you start running them, consider the following:
  * get_name_ids.php depends on the fact that your movies already have the
