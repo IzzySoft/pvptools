@@ -1,0 +1,72 @@
+#==============================================================================
+# phpVideoPro User Management CLI                   (c) 2009 by Itzchak Rehberg
+# -----------------------------------------------------------------------------
+# $Id$
+#==============================================================================
+
+Content
+=======
+
+1) Intro
+2) Quick Intro for the Impatient
+3) Basics behind and probable cruxes
+4) Usage for the Patient
+
+-------------------------------------------------------------------------------
+
+1) Intro
+========
+
+ This text file only deals with things special to the PHP script with the
+ same name. Please also read the pvptools.txt file for common information,
+ including (but not restricted to) Copyright and Warranty.
+
+ As the name already suggests, the user.php script deals with user management
+ from the command line. You can add/remove users, change their passwords and
+ permissions, list all defined users, and list user details.
+
+-------------------------------------------------------------------------------
+
+2) Quick Intro for the Impatient
+--------------------------------
+
+ 1 - Check the configuration inside the user.php file and make the
+     "dir" reflecting the base directory of your phpVideoPro installation
+ 2 - Run the script once without any parameters to see its syntax
+ 3 - Use it as needed
+
+-------------------------------------------------------------------------------
+
+3) Basics behind and probable cruxes
+------------------------------------
+
+ This script is intended to be run from the command line only (do not place it
+ where it can be reached from other people, especially avoid storing it in your
+ web tree), while it utilizes phpVideoPros API.
+
+ This means two things: a) you need to have the PHP CLI (Command Line Interface)
+ installed, and b) you need to have its php.ini set up correctly.
+
+-------------------------------------------------------------------------------
+
+4) Usage for the Patient
+------------------------
+
+ This will basically be the same as for the impatient, just a bit more detailed.
+ First thing you have to do is to adjust the configuration to match your
+ installation. If you open the user.php with your favorite editor, you
+ will easily find the section marked "==[ Configuration ]==" - that's where you
+ need to go. Better don't change anything outside this section if you're not
+ familiar with PHP and don't know what you are doing ;)
+
+ The first line of this section defines the directory where your phpVideoPro
+ installation is to be found in. This is what you *must* adjust. This is
+ followed by a line defining the ID of an administrative user in your phpVideoPro
+ installation (who has permissions on all records) - usually this is the user
+ named "admin". To find out the corresponding ID, log into your phpVideoPro
+ installation as administrative user, and look the ID up in Admin->Users.
+
+ So far for the configuration. If you now run the script once without
+ specifying any parameters, it will tell you its syntax.
+
+ Everything else is pretty self explaining, so this document will end here :)

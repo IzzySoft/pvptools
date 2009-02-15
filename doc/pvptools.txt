@@ -99,6 +99,7 @@ Content
  * get_name_ids.php does the same for the crew members (i.e. actors, directors,
    composers)
  * backup.php is your CLI interface for backups and their restore
+ * user.php is your CLI interface for the user management
 
  Before you start running them, consider the following:
  * get_name_ids.php depends on the fact that your movies already have the
