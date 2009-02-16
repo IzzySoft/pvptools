@@ -7,7 +7,7 @@
 # $Id$
 #==============================================================================
 
-require_once("pvptools.config.php");
+require_once(dirname(__FILE__)."/pvptools.config.php");
 
 #=========================================================[ Initialization ]===
 function syntax() {

@@ -8,7 +8,7 @@
 #==============================================================================
 
 #=========================================================[ Initialization ]===
-require_once("pvptools.config.php");
+require_once(dirname(__FILE__)."/pvptools.config.php");
 
 function syntax() {
  echo "Syntax:\n  backup.php $pinst backup <type>\n"
