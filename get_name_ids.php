@@ -49,7 +49,7 @@ function samestr($str1,$str2) {
 
 #-----------------------------------------------------[ Helper: Update IDs ]---
 function imdbCheck(&$iactors,&$actor,$role,$table) {
-  GLOBAL $upd_id, $pfound, $db, $movie;
+  GLOBAL $upd_id, $pfound, $db, $movie, $report_nocheck;
   foreach($iactors as $iactor) { // walk the IMDB data set to find matches
     $pfound = FALSE;
     if (empty($actor['imdb_id'])) {
