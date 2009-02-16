@@ -29,8 +29,9 @@ Content
 
  1 - Make sure all preconditions are fulfilled (phpVideoPro and IMDBPHP are
      installed)
- 2 - Check the configuration inside the get_name_ids.php file and make the
+ 2 - Check the configuration inside the pvptools.config.php file: make the
      "dir" reflecting the base directory of your phpVideoPro installation
+     and the 'adminID' to the ID of the admin user
  3 - For the cautious: Make sure $update_name is set to FALSE
  4 - Run the script the first time having $compare_mode set to "equal" (or
      "binary") - to make sure only exact matches get updated -, passing it the
@@ -66,9 +67,9 @@ Content
 
  This will basically be the same as for the impatient, just a bit more detailed.
  First thing you have to do is to adjust the configuration to match your
- installation. If you open the get_name_ids.php with your favorite editor, you
- will easily find the section marked "==[ Configuration ]==" - that's where you need
- to go. Better don't change anything outside this section if you're not
+ installation. If you open the pvptools.config.php with your favorite editor,
+ you will easily find the section marked "==[ Configuration ]==" - that's where
+ you need to go. Better don't change anything outside this section if you're not
  familiar with PHP and don't know what you are doing ;)
 
  The first line of this section defines the directory where your phpVideoPro

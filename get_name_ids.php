@@ -7,70 +7,29 @@
 # $Id$
 #==============================================================================
 
-error_reporting(E_ERROR); # disable all but errors to be reported
-
-#==========================================================[ Configuration ]===
- $instance["demo"]->dir = '/var/www/phpvideo';
- $instance["demo"]->adminID = 1;
-
- $stopafter   = 500; // process no more than 200 entries at once
- $ignore_cat  = "cat_videoclip"; // list of cat_id to ignore - like VideoClips, comma-separated
- $skip_id     = array();
- $skip_to     = 1; // start at the beginning or other given index
- $stop_at     = 100;
- $report_nochange = TRUE;
- $compare_mode = "equal"; // how to compare: equal|binary|binary_i|soundex|metaphone
-
- # DB, when...
- $update_name  = FALSE; // same name, different IMDB ID - this COULD be a different person, but also an alias
-
 #=========================================================[ Initialization ]===
- if (empty($instance[$argv[1]]->dir)) { // no such installation
-   die("Sorry - but we have no instance with the name '".$argv[1]."'.\n");
- } else {
-   $cleaninst = $instance[$argv[1]];
-   echo "Updating PVP Installation '".$argv[1]."':\n";
- }
- if (file_exists($cleaninst->dir)) chdir($cleaninst->dir);
- else die ("Sorry - but the given directory does not exist: '".$cleaninst->dir."'.\n");
- $pvp->auth->user_id = $cleaninst->adminID;
- $pvpinstall = 1;
- if (file_exists("inc/includes.inc")) {
-   include ("inc/config.inc");
-   include ("inc/config_internal.inc");
-   include ("inc/class.preferences.inc");
-   $pvp->preferences = new preferences;
-   $incpath = explode(":", ini_get('include_path'));
-   $IMDBfound = FALSE;
-   foreach($incpath as $trypath) {
-     if (file_exists("$trypath/imdb.class.php")) {
-       echo "- Including IMDB class\n";
-       if (file_exists("$trypath/imdb_person.class.php")) {
-         include_once("$trypath/imdb.class.php");
-         include_once("$trypath/imdb_person.class.php");
-         $IMDBfound = TRUE;
-       }
-       break;
-     }
-   }
-   if (!$IMDBfound) die("IMDB classes not found, aborting.\n");
- } else {
-   die ("Sorry - could not find this installations API files.\n");
- }
+require_once("pvptools.config.php");
+$incpath = explode(":", ini_get('include_path'));
+$IMDBfound = FALSE;
+foreach($incpath as $trypath) {
+  if (file_exists("$trypath/imdb.class.php")) {
+    echo "- Including IMDB class\n";
+    if (file_exists("$trypath/imdb_person.class.php")) {
+      include_once("$trypath/imdb.class.php");
+      include_once("$trypath/imdb_person.class.php");
+      $IMDBfound = TRUE;
+    }
+    break;
+  }
+}
+if (!$IMDBfound) die("IMDB classes not found, aborting.\n");
 
- function lang($str,$m1="",$m2="",$m3="") {
-   return $str;
- }
- function debug ($level,$msg) {
-   return TRUE;
- }
-
- $imdbper = new imdb_person('0000007');
- $imdbmov = new imdb('0119177');
- $imdbmov->imdbsite = "akas.imdb.com";
+$imdbper = new imdb_person('0000007');
+$imdbmov = new imdb('0119177');
+$imdbmov->imdbsite = "akas.imdb.com";
 
 #==========================================================[ Check Process ]===
- $upd_id = 0; // counter
+$upd_id = 0; // counter
 
 #-------------------------------------------------[ Helper: String Compare ]---
 function samestr($str1,$str2) {
@@ -160,7 +119,7 @@ function imdbCheck(&$iactors,&$actor,$role,$table) {
      if ($i==$stop_at) break;
      if (in_array($i,$skip_id)) continue;
      $movie = $db->get_movie($mid[$i]);
-     echo " - Processing movie ID '".$mid[$i]."' (".$movie["title"].")\n";
+     echo " - [$i] Processing movie ID '".$mid[$i]."' (".$movie["title"].")\n";
      $imdbmov->setid($movie["imdb_id"]);
      $iactors = $imdbmov->cast(); $iac = count($iactors);
      if ($iac==0) { // not found in IMDB - ooops? - or no actors found there

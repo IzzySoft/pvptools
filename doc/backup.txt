@@ -32,8 +32,9 @@ Content
 2) Quick Intro for the Impatient
 --------------------------------
 
- 1 - Check the configuration inside the backup.php file and make the
+ 1 - Check the configuration inside the pvptools.config.php file and make the
      "dir" reflecting the base directory of your phpVideoPro installation
+     and the "adminID" the id of the admin user
  2 - Run the script once without any parameters to see its syntax
  3 - Do your backups and restores
 
@@ -59,7 +60,7 @@ Content
 
  This will basically be the same as for the impatient, just a bit more detailed.
  First thing you have to do is to adjust the configuration to match your
- installation. If you open the backup.php with your favorite editor, you
+ installation. If you open the pvptools.config.php with your favorite editor, you
  will easily find the section marked "==[ Configuration ]==" - that's where you
  need to go. Better don't change anything outside this section if you're not
  familiar with PHP and don't know what you are doing ;)

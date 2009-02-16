@@ -37,7 +37,7 @@ Content
 2) Quick Intro for the Impatient
 --------------------------------
 
- 1 - Check the configuration inside the get_movie_ids.php file and make the
+ 1 - Check the configuration inside the pvptools.config.php file and make the
      "dir" reflecting the base directory of your phpVideoPro installation
  2 - For the cautious: Make sure all $write_* variables are set to FALSE
  3 - Run the script the first time from the command line, passing it the
@@ -75,7 +75,7 @@ Content
 
  This will basically be the same as for the impatient, just a bit more detailed.
  First thing you have to do is to adjust the configuration to match your
- installation. If you open the get_movie_ids.php with your favorite editor, you
+ installation. If you open the pvptools.config..php with your favorite editor, you
  will easily find the section marked "==[ Configuration ]==" - that's where you
  need to go. Better don't change anything outside this section if you're not
  familiar with PHP and don't know what you are doing ;)
@@ -86,9 +86,9 @@ Content
  installation (who has permissions on all records) - usually this is the user
  named "admin". To find out the corresponding ID, log into your phpVideoPro
  installation as administrative user, and look the ID up in Admin->Users.
- The next two settings you normally won't need to touch - except if you want to
- disable the scan for missing IMDB IDs or don't want to update the rating.
- Disabling both makes the script useless - obviously.
+ The settings 'imdbid' and 'rating' you normally won't need to touch - except if
+ you want to disable the scan for missing IMDB IDs or don't want to update the
+ rating. Disabling both makes the script useless - obviously.
 
  Now for the next paragraph. The $stop_after you will normally leave as-is:
  This tells you how many movies you want to process per run at maximum. This

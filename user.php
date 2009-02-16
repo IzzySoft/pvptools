@@ -7,66 +7,33 @@
 # $Id$
 #==============================================================================
 
-error_reporting(E_ERROR); # disable all but errors to be reported
-
-#==========================================================[ Configuration ]===
- $instance["demo"]->dir = '/var/www/phpvideo';
- $instance["demo"]->adminID = 1;
+require_once("pvptools.config.php");
 
 #=========================================================[ Initialization ]===
 function syntax() {
  GLOBAL $script;
- echo "Syntax:\n  $script <instance> add <login> <password> <permissions>\n"
-    . "  $script <instance> remove <login> [cascade|keep]\n"
-    . "  $script <instance> perms <login> <permissions>\n"
-    . "  $script <instance> pass <login> <password>\n"
-    . "  $script <instance> show <login>\n"
-    . "  $script <instance> list\n"
-    . "where:\n  <instance> is a phpVideoPro installation configured in the script\n"
-    . "  <login> is the login of the user to process\n"
+ echo "Syntax:\n  $script $pinst add <login> <password> <permissions>\n"
+    . "  $script $pinst remove <login> [cascade|keep]\n"
+    . "  $script $pinst perms <login> <permissions>\n"
+    . "  $script $pinst pass <login> <password>\n"
+    . "  $script $pinst show <login>\n"
+    . "  $script $pinst list\n"
+    . "where\n";
+ if (!empty($pinst)) echo "  <instance> is a phpVideoPro installation configured in the script\n";
+ echo "  <login> is the login of the user to process\n"
     . "  <password> the password for the user\n"
     . "  <permissions> are the permissions the specified user should have\n\n";
  exit;
 }
 
 #----------------------------------------------------[ evaluate parameters ]---
- $script = array_shift($argv);
- $inst   = array_shift($argv);
  $modus  = array_shift($argv);
  if (empty($modus)) syntax();
-
-#-----------------------------------------------[ check specified instance ]---
- if (empty($instance[$inst]->dir)) { // no such installation
-   die("Sorry - but we have no instance with the name '".$argv[1]."'.\n");
- } else {
-   $cleaninst = $instance[$inst];
- }
- if (file_exists($cleaninst->dir)) chdir($cleaninst->dir);
- else die ("Sorry - but the given directory does not exist: '".$cleaninst->dir."'.\n");
-#---------------------------------------------------------[ initialize API ]---
- $pvp->auth->user_id = $cleaninst->adminID;
- $pvpinstall = 1;
- if (file_exists("inc/includes.inc")) {
-   include ("inc/config.inc");
-   include ("inc/config_internal.inc");
-   include ("inc/class.preferences.inc");
-   include ("inc/class.common.inc");
-   $pvp->preferences = new preferences;
-   $pvp->common = new common;
- } else {
-   die ("Sorry - could not find this installations API files.\n");
- }
-
- function lang($str,$m1="",$m2="",$m3="") {
-   return $str;
- }
- function debug ($level,$msg) {
-   return TRUE;
- }
 
 #==========================================================[ Check Process ]===
 switch ($modus) {
   case "remove" :
+#--------------------------------------------------[ remove specified user ]---
     $login   = array_shift($argv);
     $objects = array_shift($argv);
     if (empty($login)) syntax();
@@ -92,6 +59,7 @@ switch ($modus) {
     echo "Sorry - could not find a user with the login '$login'.\n";
     break;
   case "add"    :
+#---------------------------------------------------------[ add a new user ]---
     $login = array_shift($argv);
     $passw = array_shift($argv);
     $perms = array_shift($argv);
@@ -116,6 +84,7 @@ switch ($modus) {
     else die ("Failed to create user '$login'!\n\n");
     break;
   case "perms"  :
+#----------------------------------------[ change perms for specified user ]---
     $login = array_shift($argv);
     $perms = array_shift($argv);
     if (empty($perms)) {
@@ -144,6 +113,7 @@ switch ($modus) {
     echo "Sorry - could not find a user with the login '$login'.\n";
     break;
   case "pass"   :
+#---------------------------------------[ change passwd for specified user ]---
     $login = array_shift($argv);
     $passw = array_shift($argv);
     if (empty($passw)) die("You must specify a password.\n\n");
@@ -161,6 +131,7 @@ switch ($modus) {
     echo "Sorry - could not find a user with the login '$login'.\n";
     break;
   case "show"   :
+#----------------------------------------[ show details for specified user ]---
     $login = array_shift($argv);
     $users = $db->get_users();
     $uc = count($users);
@@ -181,7 +152,6 @@ switch ($modus) {
     }
     echo "Sorry - could not find a user with the login '$login'.\n";
     break;
-#----------------------------------------[ show details for specified user ]---
   case "list"   :
 #-------------------------------------------------------------[ list users ]---
     $users = $db->get_users();
