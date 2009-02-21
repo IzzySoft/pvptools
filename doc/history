@@ -3,6 +3,10 @@ $Id$
 History of pvptools
 ===================
 
+v0.4
+-----------------
+! users.php: Passwords have been screwed up (double-md5)
+
 v0.3 (16.02.2009)
 -----------------
 + added script for backup and restore

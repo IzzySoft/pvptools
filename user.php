@@ -73,7 +73,7 @@ switch ($modus) {
       die("You must specify a password.\n\n");
     } elseif (empty($login)) syntax();
     $user->login = $login;
-    $user->pwd   = md5($passw);
+    $user->pwd   = $passw;
     if (strpos($perms,'a')!==FALSE) $user->admin  = 1; else $user->admin  = 0;
     if (strpos($perms,'b')!==FALSE) $user->browse = 1; else $user->browse = 0;
     if (strpos($perms,'d')!==FALSE) $user->add    = 1; else $user->add    = 0;
@@ -121,7 +121,7 @@ switch ($modus) {
     $uc = count($users);
     for ($i=0;$i<$uc;++$i) {
       if (strtolower($login)==strtolower($users[$i]->login)) {
-        $users[$i]->pwd = md5($passw);
+        $users[$i]->pwd = $passw;
         $rc = $db->set_user($users[$i]);
         if ($rc) die("User successfully updated.\n\n");
         else die("User update failed, sorry.\n\n");
