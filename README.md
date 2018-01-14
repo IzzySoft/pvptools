@@ -32,4 +32,4 @@ specified. Otherwise you may destroy parts of your installation.
 There is no special installation required. Simply unpack the downloaded archive
 into a directory of your choice, and keep the script files together with the
 configuration file in the same directory. Some configuration will, however, be
-required - and discussed in its [article](/IzzySoft/pvptools/wiki/Configuration).
+required - and discussed in its [article](https://github.com/IzzySoft/pvptools/wiki/Configuration).
