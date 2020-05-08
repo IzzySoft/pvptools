@@ -1,30 +1,30 @@
 #!/usr/bin/php
-<?
+<?php
 #==============================================================================
-# phpVideoPro IMDB Updater                     (c) 2007-2009 by Itzchak Rehberg
-# Pass the name of the installation as first argument
-# -----------------------------------------------------------------------------
-# $Id$
+# phpVideoPro IMDB Updater                     (c) 2007-2020 by Itzchak Rehberg
+# Pass the name of the installation as first argument unless explicitly set
+# in pvptools.config.php
 #==============================================================================
 
 #=========================================================[ Initialization ]===
 require_once(dirname(__FILE__)."/pvptools.config.php");
 
-$incpath = explode(":", ini_get('include_path'));
-$IMDBfound = FALSE;
-foreach($incpath as $trypath) {
-  if (file_exists("$trypath/imdb.class.php")) {
-    echo "Including IMDB class\n";
-    include_once("$trypath/imdb.class.php");
-    $IMDBfound = TRUE;
-    break;
-  }
+if ( !empty($imdb_api_path) && file_exists("${imdb_api_path}/bootstrap.php") ) {
+  require_once("${imdb_api_path}/bootstrap.php");
+} else {
+  die("IMDB classes not found, aborting.\n");
 }
-if (!$IMDBfound) die("IMDB classes not found, aborting.\n");
 
-$search = new imdbsearch();
-$imdbmov = new imdb('0119177');
-$imdbmov->imdbsite = "uk.imdb.com";
+$imdb_lang = $pvp->preferences->get("imdb_lang");
+$iconfig = new \Imdb\Config();
+if ( !empty($imdb_lang) ) $iconfig->language = $imdb_lang;
+$search = new \Imdb\TitleSearch($iconfig);
+$imdbmov = new \Imdb\Title('0119177',$iconfig);
+
+if ( !property_exists($pvp,'auth') ) {
+  $pvp->auth = new stdClass();
+}
+$pvp->auth->user_id = $instance[$inst]->adminID;
 
 #==========================================================[ Check Process ]===
 echo "Updating PVP Installation '$inst':\n";
@@ -49,8 +49,7 @@ echo "Updating PVP Installation '$inst':\n";
        if ($i==$stop_at) break;
        if (in_array($i,$skip_id)) continue;
        $movie = $db->get_movie($mid[$i]);
-       $search->setsearchname($movie["title"]);
-       $results = $search->results();
+       $results = $search->search($movie["title"]);
        foreach ($results as $res) {
          if ($movie["year"]==$res->year()) {
            if ($movie["title"]==$res->title()) {
@@ -62,7 +61,8 @@ echo "Updating PVP Installation '$inst':\n";
              break;
            } else { // check AKAs
              $imdbid = $res->imdbid();
-             $imdbmov->setid($imdbid);
+             unset($imdbmov);
+             $imdbmov = new \Imdb\Title($imdbid,$iconfig);
              $akas   = $imdbmov->alsoknow();
              $akac   = count($akas);
              echo "* [$i] Possible match for '".$movie["title"]."' (".$movie["year"]."): ".$res->title()." (".$res->year()."), IMDB ID '".$res->imdbid()."' ($akac AKAs)\n";
@@ -83,13 +83,12 @@ echo "Updating PVP Installation '$inst':\n";
              }
              // check for director
              unset($imdbmov); // re-initialize - otherwise breaks after the first check whyever
-             $imdbmov = new imdb($imdbid);
-             $imdbmov->imdbsite = "uk.imdb.com";
+             $imdbmov = new \Imdb\Title($imdbid,$iconfig);
              $dir = $imdbmov->director(); // check for director
              for ($k=0;$k<count($dir);++$k) {
                echo "~ [$i] DirectorCheck: '".$dir[$k]["name"]."'/'".$movie["director"]."'\n";
                if ($movie["director"]==$dir[$k]["name"]) {
-                 echo "* [$i] MATCH with director (".$dir[$k]["name"]."): '".$movie["title"]."' (".$movie["year"]."): ".$res->title()." (".$res->year()."), IMDB ID '".$res->imdbid()."'\n";
+                 echo "* [$i] MATCH with year and director (".$dir[$k]["name"]."): '".$movie["title"]."' (".$movie["year"]."): ".$res->title()." (".$res->year()."), IMDB ID '".$res->imdbid()."'\n";
                  if ($write_yd) {
                    $db->query("UPDATE pvp_video SET imdb_id='".$res->imdbid()."' WHERE id=".$mid[$i]);
                    ++$upd_id;
@@ -112,6 +111,7 @@ echo "Updating PVP Installation '$inst':\n";
  if ($cleaninst->rating) {
    $db->query("SELECT id,imdb_id FROM pvp_video WHERE rating IS NULL AND imdb_id IS NOT NULL AND imdb_id!=''");
    while ($db->next_record()) {
+     $m = new stdClass();
      $m->id = $db->f('id');
      $m->imdbid = $db->f('imdb_id');
      $mid[] = $m;
@@ -121,7 +121,8 @@ echo "Updating PVP Installation '$inst':\n";
      echo "- Try to update rating for $midc movies...\n";
      for ($i=0;$i<$midc;++$i) {
        if ($i>$stopafter) break;
-       $imdbmov->setid($mid[$i]->imdbid);
+       unset($imdbmov);
+       $imdbmov = new \Imdb\Title($mid[$i]->imdbid,$iconfig);
        $rating = $imdbmov->rating();
        if (!empty($rating)) {
          echo "* [$i] Rating for '".$imdbmov->title()."' (".$mid[$i]->imdbid.") is ".$rating." - Updating DB.\n";
