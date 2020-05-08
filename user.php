@@ -1,10 +1,8 @@
 #!/usr/bin/php
-<?
+<?php
 #==============================================================================
-# phpVideoPro User Management CLI                   (c) 2009 by Itzchak Rehberg
+# phpVideoPro User Management CLI              (c) 2009-2020 by Itzchak Rehberg
 # Pass the name of the installation as first argument
-# -----------------------------------------------------------------------------
-# $Id$
 #==============================================================================
 
 require_once(dirname(__FILE__)."/pvptools.config.php");

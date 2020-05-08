@@ -1,10 +1,8 @@
 #!/usr/bin/php
-<?
+<?php
 #==============================================================================
-# phpVideoPro Backup CLI                            (c) 2009 by Itzchak Rehberg
+# phpVideoPro Backup CLI                       (c) 2009-2020 by Itzchak Rehberg
 # Pass the name of the installation as first argument
-# -----------------------------------------------------------------------------
-# $Id$
 #==============================================================================
 
 #=========================================================[ Initialization ]===
@@ -20,6 +18,11 @@ function syntax() {
  exit;
 }
 
+if ( !property_exists($pvp,'auth') ) {
+  $pvp->auth = new stdClass();
+}
+$pvp->auth->user_id = $instance[$inst]->adminID;
+
 #----------------------------------------------------[ evaluate parameters ]---
 $modus  = array_shift($argv);
 $type   = array_shift($argv);
@@ -31,6 +34,7 @@ include ("inc/class.xfer.inc");
 #==========================================================[ Check Process ]===
 $xfer = new xfer("export");
 $xfer->compressionOn();
+//$xfer->storeOnDisk = true;
 if ($modus=="backup") {
 #-----------------------------------------------------------------[ Backup ]---
 # movie, sysconf, cats
@@ -60,5 +64,4 @@ if ($modus=="backup") {
 }
 
 #---------------------------------------------------------------[ All Done ]---
- // echo "Done - updated $upd_id IMDB IDs and $upd_rat ratings in your database.\n";
 ?>
