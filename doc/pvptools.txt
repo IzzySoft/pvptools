@@ -1,7 +1,5 @@
 #==============================================================================
-# phpVideoPro Admin Tools                      (c) 2007-2009 by Itzchak Rehberg
-# -----------------------------------------------------------------------------
-# $Id$
+# phpVideoPro Admin Tools                      (c) 2007-2020 by Itzchak Rehberg
 #==============================================================================
 
 Content
@@ -31,7 +29,7 @@ Content
  This means, for many things it uses the settings of the given installation,
  e.g. concerning the IMDB cache and the like. Furthermore, they of course need
  some IMDB libraries - which means you should have installed the IMDBPHP
- package (version 1.0.8 or higher) and it must be available via the include_path
+ package (version 6.4.0 or higher) and it must be available via the include_path
  configured for your php-cli binaries.
 
 -------------------------------------------------------------------------------
@@ -61,8 +59,8 @@ Content
 3) CopyRight
 ------------
 
-  phpVideoPro is (c) 2001-2009 by Itzchak Rehberg and IzzySoft, and is
-  protected by the GNU Public License Version 2 (GPL). In short, this means:
+  phpVideoPro is (c) by Andreas Itzchak Rehberg, and is protected by the GNU
+  Public License Version 2 (GPL). In short, this means:
   - you'll have the source code available
   - you may run this program on as many machines as you want/have
   - you may copy and distribute it as much as you want - as long as you don't
@@ -108,7 +106,7 @@ Content
    you don't have the movie IMDB IDs stored into your database, make sure
    to run get_movie_ids.php first
  * as mentioned before, both scripts require phpVideoPro (at least v0.9.3)
-   and IMDBPHP (at least v1.0.8) to be installed and configured.
+   and IMDBPHP (at least v6.4.0) to be installed and configured.
  * Before running the scripts, please consult their corresponding documentation.
    You will for sure need to check their configuration, and have the advice
    concerning their special usage checked.

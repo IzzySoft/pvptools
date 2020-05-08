@@ -9,6 +9,7 @@ v0.4
 * renaming pvptools.config.php to pvptools.config.php.sample to avoid overwrite on updates
 * make get_movie_ids.php working with recent IMDBPHP
 * backup, user: use full PHP open tag instead of short_tag
+* updating pvptools.txt
 
 v0.3 (16.02.2009)
 -----------------
