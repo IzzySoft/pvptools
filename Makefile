@@ -21,7 +21,7 @@ install: installdirs
 	#$(INSTALL_DATA) -c man/*.8* $(DESTDIR)$(man8dir)
 
 uninstall:
-	rm -f $(DESTDIR)$(bindir)/get_movie_ids.php $(DESTDIR)$(bindir)/get_name_ids.php $(DESTDIR)$(bindir)/backup.php $(DESTDIR)$(bindir)/user.php $(DESTDIR)$(bindir)/pvptools.config.php
+	rm -f $(DESTDIR)$(bindir)/get_movie_ids.php $(DESTDIR)$(bindir)/get_name_ids.php $(DESTDIR)$(bindir)/backup.php $(DESTDIR)$(bindir)/user.php $(DESTDIR)$(bindir)/pvptools.config.php.sample
 	rm -rf $(DESTDIR)$(docdir)
 	#rm -f $(DESTDIR)$(man8dir)/get_movie_ids.* $(DESTDIR)$(man8dir)/get_name_ids.*
 

@@ -6,6 +6,7 @@ History of pvptools
 v0.4
 -----------------
 ! users.php: Passwords have been screwed up (double-md5)
+* renaming pvptools.config.php to pvptools.config.php.sample to avoid overwrite on updates
 
 v0.3 (16.02.2009)
 -----------------

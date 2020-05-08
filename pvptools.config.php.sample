@@ -1,8 +1,6 @@
-<?
+<?php
 #==============================================================================
-# pvptools configuration file                  (c) 2007-2009 by Itzchak Rehberg
-# -----------------------------------------------------------------------------
-# $Id$
+# pvptools configuration file                  (c) 2007-2020 by Itzchak Rehberg
 #==============================================================================
 
 error_reporting(E_ERROR); # disable all but errors to be reported
