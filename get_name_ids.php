@@ -1,33 +1,31 @@
 #!/usr/bin/php
-<?
+<?php
 #==============================================================================
-# phpVideoPro IMDB Updater for staff IDs            (c) 2009 by Itzchak Rehberg
-# Pass the name of the installation as first argument
-# -----------------------------------------------------------------------------
-# $Id$
+# phpVideoPro IMDB Updater for staff IDs       (c) 2009-2020 by Itzchak Rehberg
+# Pass the name of the installation as first argument unless explicitly set
+# in pvptools.config.php
 #==============================================================================
 
 #=========================================================[ Initialization ]===
 require_once(dirname(__FILE__)."/pvptools.config.php");
 
-$incpath = explode(":", ini_get('include_path'));
-$IMDBfound = FALSE;
-foreach($incpath as $trypath) {
-  if (file_exists("$trypath/imdb.class.php")) {
-    echo "- Including IMDB class\n";
-    if (file_exists("$trypath/imdb_person.class.php")) {
-      include_once("$trypath/imdb.class.php");
-      include_once("$trypath/imdb_person.class.php");
-      $IMDBfound = TRUE;
-    }
-    break;
-  }
+if ( !empty($imdb_api_path) && file_exists("${imdb_api_path}/bootstrap.php") ) {
+  require_once("${imdb_api_path}/bootstrap.php");
+} else {
+  die("IMDB classes not found, aborting.\n");
 }
-if (!$IMDBfound) die("IMDB classes not found, aborting.\n");
 
-$imdbper = new imdb_person('0000007');
-$imdbmov = new imdb('0119177');
-$imdbmov->imdbsite = "akas.imdb.com";
+$imdb_lang = $pvp->preferences->get("imdb_lang");
+$iconfig = new \Imdb\Config();
+if ( !empty($imdb_lang) ) $iconfig->language = $imdb_lang;
+$imdbmov = new \Imdb\Title('0119177',$iconfig);
+$imdbper = new \Imdb\Person('0000007',$iconfig);
+
+if ( !property_exists($pvp,'auth') ) {
+  $pvp->auth = new stdClass();
+}
+$pvp->auth->user_id = $instance[$inst]->adminID;
+
 
 #==========================================================[ Check Process ]===
 $upd_id = 0; // counter
@@ -121,7 +119,8 @@ function imdbCheck(&$iactors,&$actor,$role,$table) {
      if (in_array($i,$skip_id)) continue;
      $movie = $db->get_movie($mid[$i]);
      echo " - [$i] Processing movie ID '".$mid[$i]."' (".$movie["title"].")\n";
-     $imdbmov->setid($movie["imdb_id"]);
+     unset($imdbmov);
+     $imdbmov = new \Imdb\Title($movie["imdb_id"],$iconfig);
      $iactors = $imdbmov->cast(); $iac = count($iactors);
      if ($iac==0) { // not found in IMDB - ooops? - or no actors found there
        echo "  ! Sorry, no actors recorded for this movie at the IMDB site\n";
