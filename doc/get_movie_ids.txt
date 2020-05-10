@@ -1,7 +1,5 @@
 #==============================================================================
-# phpVideoPro Movie IMDBid Updater             (c) 2007-2009 by Itzchak Rehberg
-# -----------------------------------------------------------------------------
-# $Id$
+# phpVideoPro Movie IMDBid Updater             (c) 2007-2020 by Itzchak Rehberg
 #==============================================================================
 
 Content
@@ -27,10 +25,15 @@ Content
  $write_yt, $write_aka_yt and $write_yd enabled. From the over 500 movies w/o
  the IMDB ID set, it automatically updated about 270 movies correctly (which
  is more than 50%). While many movies just have not been identified, most
- have been matched perfectly - only 3 false positives (the script assumed them
+ have been matched perfectly – only 3 false positives (the script assumed them
  being matched, while they didn't match) have been encountered during the
- process - all 3 on the $write_yd issue (more on this later). So it saves you
+ process – all 3 on the $write_yd issue (more on this later). So it saves you
  a lot of work if you want all/most movies have the rating values set.
+
+ I still strongly recommend to first make a „dry run“ – i.e. set all the $write*
+ variables to FALSE – and see what WOULD be done. Though in all cases I checked,
+ $write_yt never had a „false positive“, that always was on my own collection.
+ It might be different with yours.
 
 -------------------------------------------------------------------------------
 
@@ -38,11 +41,11 @@ Content
 --------------------------------
 
  1 - Check the configuration inside the pvptools.config.php file and make the
-     "dir" reflecting the base directory of your phpVideoPro installation
+     „dir“ reflecting the base directory of your phpVideoPro installation
  2 - For the cautious: Make sure all $write_* variables are set to FALSE
  3 - Run the script the first time from the command line, passing it the
      name of your installation (in the shipped version, this is "demo").
-     Watch the output for the word "MATCH" and see whether these are really
+     Watch the output for the word „MATCH“ and see whether these are really
      matches. If you see no false positives, you can set the $write_yt,
      $write_aka_yt and write_yd variables to TRUE and run again.
      Repeat this step until no true MATCH is reported anymore.
@@ -51,7 +54,7 @@ Content
      update is less than your setting for $stop_at
  5 - From your experience, you may now start playing with the $write_yf
      option if you like the risk, or you either done or continue reading this
-     documents for more details - to find out what else you *could* do.
+     documents for more details – to find out what else you *could* do.
 
 -------------------------------------------------------------------------------
 
@@ -60,12 +63,13 @@ Content
  The script is intended to run from the command line for a couple of reasons.
  First, if it would run in the browser, you had to jump around between the
  browser and the command line to change the options between the runs. Second,
- and more important: The browser would simply timeout before the job is done.
+ and more important: The browser could simply timeout before the job is done
+ (especially on huge collections and with an empty IMDB cache).
 
  This means two things: a) you need to have the PHP CLI (Command Line Interface)
  installed, and b) you need to have its php.ini set up correctly. With the
- defaults used there, the script will most likely abort with some "not enough
- memory" warning - so you need to increase the memory_limit in the php.ini
+ defaults used there, the script will most likely abort with some „not enough
+ memory“ warning – so you need to increase the memory_limit in the php.ini
  first. For most installations, 24M will be a good choice.
 
 -------------------------------------------------------------------------------
@@ -75,24 +79,25 @@ Content
 
  This will basically be the same as for the impatient, just a bit more detailed.
  First thing you have to do is to adjust the configuration to match your
- installation. If you open the pvptools.config..php with your favorite editor, you
- will easily find the section marked "==[ Configuration ]==" - that's where you
+ installation. If you open the pvptools.config.php with your favorite editor (if
+ there is no such file, create it as copy from pvptools.config.php.sample), you
+ will easily find the section marked "==[ Configuration ]==" – that's where you
  need to go. Better don't change anything outside this section if you're not
  familiar with PHP and don't know what you are doing ;)
 
  The first line of this section defines the directory where your phpVideoPro
  installation is to be found in. This is what you *must* adjust. This is
  followed by a line defining the ID of an administrative user in your phpVideoPro
- installation (who has permissions on all records) - usually this is the user
- named "admin". To find out the corresponding ID, log into your phpVideoPro
- installation as administrative user, and look the ID up in Admin->Users.
- The settings 'imdbid' and 'rating' you normally won't need to touch - except if
+ installation (who has permissions on all records) – usually this is the user
+ named „admin“. To find out the corresponding ID, log into your phpVideoPro
+ installation as administrative user, and look up the ID in Admin->Users.
+ The settings 'imdbid' and 'rating' you normally won't need to touch – except if
  you want to disable the scan for missing IMDB IDs or don't want to update the
- rating. Disabling both makes the script useless - obviously.
+ rating. Disabling both makes the script useless – obviously.
 
  Now for the next paragraph. The $stop_after you will normally leave as-is:
  This tells you how many movies you want to process per run at maximum. This
- is for the advanced users play-around - we normally will use smaller numbers,
+ is for the advanced users play-around – we normally will use smaller numbers,
  but adjust them with the $skip_to and $stop_at variables.
 
  $ignore_cat also is very unlikely to be changed by you. It is a comma separated
@@ -103,37 +108,37 @@ Content
  translation files, or on the admin->categories screen in your browser).
 
  $skip_id you can also skip for the first run. This gets interesting when
- encountering our so-called "false positives": The numbers shown in front of
+ encountering our so-called „false positives“: The numbers shown in front of
  such can be put in here comma separated. But beware: These numbers may change
  between runs if any other movies have been identified positively, so handle
  this with care.
 
  Now we again have two interesting settings: $skip_to tells us where to start
  the scan, and $stop_at where to stop. This way you can walk through the big
- list in pieces you can handle - and after a dry run showing you some "false
- positives", you can adjust your run to stop before or start after them to
+ list in pieces you can handle – and after a dry run showing you some „false
+ positives“, you can adjust your run to stop before or start after them to
  avoid messing up your data.
 
  One more paragraph to handle: the $write_* variables. Set them all to FALSE
  to make a dry run. This will list what *could* be done, but no changes are
  written to the database. Wherever you set one of these variables to TRUE,
  changes *will* be written to your phpVideoPro database. Depending on which
- ones you set or not, different "writes" will take place:
+ ones you set or not, different „writes“ will take place:
 
  - $write_yt will check for a perfect match on the movies name and year. If we
    have such a match, the IMDB ID retrieved will be written to your database.
    Otherwise, the search continues. This looks to me like a very safe candidate,
-   I never saw any "false positive" on this.
+   I never saw any „false positive“ on this.
  - $write_aka_yt is similiar, but will look for one of the movies alternative
-   names plus the year - and only be applied if no match on the name itself
-   (without the akas) was found. Also a safe candidate - in all my tests, it
-   never found any positive - heck, looks like I wasted time on that...
+   names plus the year – and only be applied if no match on the name itself
+   (without the akas) was found. Also a pretty safe candidate – in all my tests,
+   it never found any positive – heck, looks like I wasted time on that…
  - $write_yf is a dangerous option and will cause many false positives, so
-   better don't use it at all - or only very careful together with narrow
+   better don't use it at all – or only very careful together with narrow
    $skip_to and $stop_at ranges. It will take the matches IMDB returns on our
-   search for the name, disregard any "perfect" matches on name or aka, and use
+   search for the name, disregard any „perfect“ matches on name or aka, and use
    the IMDB ID of the first movie returned with the correct year. Watching the
-   log output carefully, however, may make this useful - but you are warned!
+   log output carefully, however, may make this useful – but you are warned!
  - $write_yd is again a considerable candidate. It writes the found IMDB ID to
    your database when a result was returned w/o a perfect name/aka match, but
    having the right year plus one of the directors matches your records.
@@ -143,28 +148,28 @@ Content
 
  So far for the configuration. Now to do the job, you probably will need a
  couple of runs. For paranoia, you may set all the $write_* variables to FALSE
- and make a complete dry run first - this is the safest. Watch the log output
- for the word MATCH (all uppercase) - that is where information would be
+ and make a complete dry run first – this is the safest. Watch the log output
+ for the word MATCH (all uppercase) – that is where information would be
  written to your DB if the corresponding $write_* var is set to TRUE. Simply
- "MATCH for <title>" corresponds to $write_yt, "MATCH on aka" to $write_aka_yt,
- and "MATCH on director" to $write_yd. The firs line starting with
- "Possible match" for a run-id (that is the number in square brackets at
- line start) is where $write_yf would hit - but for some reason the order of
+ „MATCH for <title>“ corresponds to $write_yt, „MATCH on aka“ to $write_aka_yt,
+ and „MATCH on director“ to $write_yd. The first line starting with
+ „Possible match“ for a run-id (that is the number in square brackets at
+ line start) is where $write_yf would hit – but for some reason the order of
  akas returned *may* differ between runs.
 
  In case you see no false positives at any of the MATCHes, you may turn the
- 3 "safe" $write_* to TRUE and repeat the run. Then set them to FALSE again
+ 3 „safe“ $write_* to TRUE and repeat the run. Then set them to FALSE again
  and increase $skip_to and $stop_at by LESS then the number of updates
  reported (to have a small overlap), and repeat (until done). If you see some
  false postives, but also a lot of right MATCHes, you may just use a subset of
- the available $write_* vars for the real job - and/or play with the $skip_to/
+ the available $write_* vars for the real job – and/or play with the $skip_to/
  $stop_at range.
 
  The rating will be updated then for all those movies having an IMDB ID set,
- but no rating yet - if the IMDB gives us a rating back. So don't wonder if
- the output states "Trying to update 10 ratings", and then just does 8. Or
+ but no rating yet – if the IMDB gives us a rating back. So don't wonder if
+ the output states „Trying to update 10 ratings“, and then just does 8. Or
  none. The number displayed here is the number of movies having an IMDB ID
- set, but no rating yet - which maybe due to the fact that there is no rating
+ set, but no rating yet – which maybe due to the fact that there is no rating
  available.
 
 -------------------------------------------------------------------------------
@@ -178,5 +183,5 @@ Content
  the $write_yt and $write_aka_yt options to TRUE, having at least some 10..
  25% of your movies done.
 
- Bullshit - now the doc is twice as large as the script itself - at least it
+ Bullshit – now the doc is twice as large as the script itself – at least it
  was written in much fewer time...

@@ -118,4 +118,4 @@ Content
 
  More information can be found in the other text files of this package. You
  might as well want to check the projects web site for more information: See
- http://projects.izzysoft.de/trac/phpvideopro
+ https://github.com/IzzySoft/phpVideoPro
